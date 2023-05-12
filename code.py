@@ -274,7 +274,7 @@ class Board:
             return True
         else:
             return False
-        piece.not_step_bef = False
+        piece.not_step_bef = False 
         if piece.char == "K":
             self.pos_kings[self.color] = [row1, col1]
         self.field[row1][col1] = self.field[row][col]
