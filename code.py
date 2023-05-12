@@ -274,7 +274,7 @@ class Board:
             return True
         else:
             return False
-        piece.not_step_bef = False 
+        piece.not_step_bef = False
         if piece.char == "K":
             self.pos_kings[self.color] = [row1, col1]
         self.field[row1][col1] = self.field[row][col]
@@ -297,8 +297,12 @@ while True:
     command = input()
     if command == 'exit':
         break
-    col, row, col1, row1 = list(map(int, command.split()))
-    if board.move_piece(row, col, row1, col1):
-        print('Ход успешен')
+    command = command.split()
+    if command[0] != "move" or len(command) != 5 or any(ele.isalpha() for ele in command[1::]):
+        print("Ввод не корректен")
     else:
-        print('Координаты некорректны! Попробуйте другой ход!')
+        col, row, col1, row1 = list(map(int, command[1::]))
+        if board.move_piece(row, col, row1, col1):
+            print('Ход успешен')
+        else:
+            print('Координаты некорректны! Попробуйте другой ход!')
