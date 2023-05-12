@@ -55,9 +55,7 @@ class Pawn(Figure):
     def change_pawn_to(self):
         char = input("Замена пешки на (Q - Ферзь; N - Конь; B - Слон; R - Ладья) -> \t")
         board.field[row][col] = Queen(self.color) if char == "Q" else \
-            Knight(self.color) if char == "N" else \
-                Bishop(self.color) if char == "B" else \
-                    Rook(self.color)
+            Knight(self.color) if char == "N" else Bishop(self.color) if char == "B" else Rook(self.color)
 
     # Корректен ли ход на пустую клетку? (Дальше не пишу)
     def can_move(self, board, row, col, row1, col1):
@@ -80,6 +78,7 @@ class Pawn(Figure):
         if (row + direction == row1 and (col + 1 == col1 or col - 1 == col1)) and \
                 (row + direction == 7 if self.color == WHITE else row + direction == 0):
             self.change_pawn_to()
+
         return (row + direction == row1) and (col + 1 == col1 or col - 1 == col1)
 
 
@@ -160,6 +159,7 @@ class Queen(Figure):
     def can_attack(self, board, row, col, row1, col1):
         return self.can_move(board, row, col, row1, col1)
 
+
 # Король
 class King(Figure):
 
@@ -172,6 +172,7 @@ class King(Figure):
 
     def can_attack(self, board, row, col, row1, col1):
         return self.can_move(board, row, col, row1, col1)
+
 
 # Доска
 class Board:
@@ -256,7 +257,8 @@ class Board:
             if not piece.can_move(board, row, col, row1, col1):
                 return False
         elif self.field[row1][col1].get_color() == opponent(piece.get_color()):
-            return piece.can_attack(board, row, col, row1, col1)
+            if not piece.can_attack(board, row, col, row1, col1):
+                return False
         # Рокировка
         elif piece.char() == "K" and self.field[row1][col1].char() == "R" and self.field[row1][col1].not_step_bef:
             if abs(col1 - col) == 4:
