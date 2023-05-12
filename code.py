@@ -1,8 +1,7 @@
 from copy import deepcopy
 
 # Константы цвета
-WHITE = 1
-BLACK = 2
+WHITE, BLACK = 1, 2
 
 
 # Обратный цвет
@@ -17,8 +16,7 @@ def print_board(board):
         print(' ', row, end='  ')
         for col in range(8):
             print('|', board.cell(row, col), end=' ')
-        print('|')
-        print('     +----+----+----+----+----+----+----+----+')
+        print('|\n     +----+----+----+----+----+----+----+----+')
     print(end='        ')
     for col in range(8):
         print(col, end='    ')
@@ -231,8 +229,7 @@ class Board:
     # Проверка на шах
     def king_is_under_attack(self, row, col, row1, col1, pos_king):
         will_board = deepcopy(board)
-        will_board.field[row1][col1] = will_board.field[row][col]
-        will_board.field[row][col] = None
+        will_board.field[row1][col1], will_board.field[row][col] = will_board.field[row][col], None
         for i in range(8):
             for j in range(8):
                 if will_board.field[i][j] is not None:
@@ -279,23 +276,17 @@ class Board:
         piece.not_step_bef = False
         if piece.char == "K":
             self.pos_kings[self.color] = [row1, col1]
-        self.field[row1][col1] = self.field[row][col]
-        self.field[row][col] = None
-        self.color = opponent(self.color)
+        self.field[row1][col1], self.field[row][col], self.color = self.field[row][col], None, opponent(self.color)
         return True
 
 
 board = Board()
 while True:
     print(board)
-    print('Команды:')
-    print('    exit                               -- выход')
+    print('Команды:\n    exit                               -- выход')
     print('    move <col> <row> <col1> <row1>     -- ход из клетки (row, col)')
     print('                                          в клетку (row1, col1)')
-    if board.current_player_color() == WHITE:
-        print('Ход белых:')
-    else:
-        print('Ход черных:')
+    print('Ход белых:' if board.current_player_color() == WHITE else 'Ход черных:')
     command = input()
     if command == 'exit':
         break
@@ -304,7 +295,5 @@ while True:
         print("Ввод не корректен")
     else:
         col, row, col1, row1 = list(map(int, command[1::]))
-        if board.move_piece(row, col, row1, col1):
-            print('Ход успешен')
-        else:
-            print('Координаты некорректны! Попробуйте другой ход!')
+        print('Ход успешен' if board.move_piece(row, col, row1, col1) else
+              'Координаты некорректны! Попробуйте другой ход!')
